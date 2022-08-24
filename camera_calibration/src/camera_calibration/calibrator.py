@@ -32,6 +32,11 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+from __future__ import print_function
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from io import StringIO
 from io import BytesIO
 import cv2
 import cv_bridge
@@ -1016,8 +1021,8 @@ class MonoCalibrator(Calibrator, object):
         """ Write images and calibration solution to a tarfile object """
 
         def taradd(name, buf):
-            if isinstance(buf, str):
-                s = BytesIO(buf.encode('utf-8'))
+            if isinstance(buf, basestring):
+                s = StringIO(buf)
             else:
                 s = BytesIO(buf)
             ti = tarfile.TarInfo(name)
@@ -1407,8 +1412,8 @@ class StereoCalibrator(Calibrator, object):
                [("right-%04d.png" % i, im) for i,(_, _, im) in enumerate(self.db)])
 
         def taradd(name, buf):
-            if isinstance(buf, str):
-                s = BytesIO(buf.encode('utf-8'))
+            if isinstance(buf, basestring):
+                s = StringIO(buf)
             else:
                 s = BytesIO(buf)
             ti = tarfile.TarInfo(name)
