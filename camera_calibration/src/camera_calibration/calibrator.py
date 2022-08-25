@@ -65,7 +65,7 @@ class CalibrationException(Exception):
     pass
 
 # TODO: Make pattern per-board?
-class ChessboardInfo():
+class ChessboardInfo(object):
     def __init__(self, pattern="chessboard", n_cols = 0, n_rows = 0, dim = 0.0, marker_size = 0.0, aruco_dict = None):
         self.pattern = pattern
         self.n_cols = n_cols
@@ -306,7 +306,7 @@ def _get_dist_model(dist_params, cam_model):
     return dist_model
 
 # TODO self.size needs to come from CameraInfo, full resolution
-class Calibrator():
+class Calibrator(object):
     """
     Base class for calibration system
     """
@@ -474,7 +474,7 @@ class Calibrator():
             num_pts = b.n_cols * b.n_rows
             opts_loc = numpy.zeros((num_pts, 1, 3), numpy.float32)
             for j in range(num_pts):
-                opts_loc[j, 0, 0] = (j // b.n_cols)
+                opts_loc[j, 0, 0] = (j / b.n_cols)
                 if self.pattern == Patterns.ACircles:
                     opts_loc[j, 0, 1] = 2*(j % b.n_cols) + (opts_loc[j, 0, 0] % 2)
                 else:
@@ -689,7 +689,7 @@ def image_from_archive(archive, name):
     imagefiledata.resize((1, imagefiledata.size))
     return cv2.imdecode(imagefiledata, cv2.IMREAD_COLOR)
 
-class ImageDrawable():
+class ImageDrawable(object):
     """
     Passed to CalibrationNode after image handled. Allows plotting of images
     with detected corner points
@@ -712,7 +712,7 @@ class StereoDrawable(ImageDrawable):
         self.dim = -1
 
 
-class MonoCalibrator(Calibrator, object):
+class MonoCalibrator(Calibrator):
     """
     Calibration class for monocular cameras::
 
@@ -758,8 +758,6 @@ class MonoCalibrator(Calibrator, object):
         """
         :param good: Good corner positions and boards
         :type good: [(corners, ChessboardInfo)]
-
-
         """
 
         (ipts, ids, boards) = zip(*good)
@@ -1045,7 +1043,7 @@ class MonoCalibrator(Calibrator, object):
         self.cal(limages)
 
 # TODO Replicate MonoCalibrator improvements in stereo
-class StereoCalibrator(Calibrator, object):
+class StereoCalibrator(Calibrator):
     """
     Calibration class for stereo cameras::
 
